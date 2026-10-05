@@ -9,7 +9,11 @@ export class HttpError extends Error {
 }
 
 export function validateId(value: unknown, field: string): string {
-  if (typeof value !== 'string' || value.length === 0 || value.trim() !== value || value.length > 128 || /[\u0000-\u001f/]/.test(value)) {
+  // if (typeof value !== 'string' ||  value || value.length > 128 || /[\u0000-\u001f/]/.test(value)) {
+  //   throw new HttpError(400, `${field} is invalid`);
+  // }
+
+   if (typeof value !== 'string' || value.length === 0 || value.trim() !== value || value.length > 128 || /[\u0000-\u001f/]/.test(value)) {
     throw new HttpError(400, `${field} is invalid`);
   }
   return value;

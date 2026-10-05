@@ -8,6 +8,8 @@ export class UserController {
 
   listChats = async (request: Request<{ userId: string }>, response: Response): Promise<void> => {
     // const chats = await this.chats.getChatsForUser(request.userId);
+
+    
         const chats = await this.chats.getChatsForUser(request.params.userId);
 
     response.status(200).json({ success: true, chats });

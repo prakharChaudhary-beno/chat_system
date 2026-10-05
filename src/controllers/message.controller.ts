@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+
 import { MessageService } from '../services/message.service.js';
 // import { MessageService } from '../services/message.service.js';
 
@@ -14,7 +15,10 @@ export class MessageController {
 //   };
 
   send = async (request: Request<{ chatId: string }>, response: Response): Promise<void> => {
-    const body = request.body as SendMessageBody;
+    // const body = request.body as SendMessageBody;
+
+        const body = request.body as SendMessageBody;
+
     const message = await this.messages.send(request.params.chatId, body?.senderId, body?.text);
     response.status(201).json({ success: true, message });
   };
@@ -42,6 +46,8 @@ export class MessageController {
 
 
      list = async (request: Request<{ chatId: string }>, response: Response): Promise<void> => {
+
+
     const messages = await this.messages.getMessages(request.params.chatId, request.query.limit);
     response.status(200).json({ success: true, messages });
   };

@@ -1,13 +1,17 @@
 import express from 'express';
-import { pool } from './config/db.js';
+// import { pool } from './db.js';
 import { firestore } from './config/firebase.js';
-import { ChatController } from './controllers/chat.controller.js';
-import { MessageController } from './controllers/message.controller.js';
+import { pool } from './config/db.js';
+
+// import { ChatController } from './controllers/chat.controller.js';
+// import { MessageController } from './controllers/message.controller.js';
 
 import { UserController } from './controllers/user.controller.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 import { createChatRouter } from './routes/chat.routes.js';
 // import { errorHandler } from './middleware/error.middleware.js';
+import { ChatController } from './controllers/chat.controller.js';
+import { MessageController } from './controllers/message.controller.js';
 
 
 
@@ -19,9 +23,11 @@ const chatService = new ChatService(pool);
 // const messageService = new createNewUserRouter( chatService);
 const messageService = new MessageService(firestore, chatService);
 
+// const chatController = new ChatController(chatService);
+// const mesController = new MessageController(messageService);
+const userController = new UserController(chatService);
 const chatController = new ChatController(chatService);
 const mesController = new MessageController(messageService);
-const userController = new UserController(chatService);
 
 export const app = express();
 app.disable('x-powered-by');

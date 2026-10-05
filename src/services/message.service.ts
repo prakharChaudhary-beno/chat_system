@@ -1,6 +1,9 @@
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
-import type { MessageResponse } from '../types/index.js';
+// import type { MessageResponse } from '../types/index.js';
 import { ChatService } from './chat.service.js';
+
+import type { MessageResponse } from '../types/index.js';
+
 import { HttpError, validateId, validateMessageId } from './errors.js';
 
 export class MessageService {
@@ -10,15 +13,18 @@ export class MessageService {
   ) {}
 
 
-    // async send(chatIdValue: string, senderIdValue: string, textValue: unknown): Promise<MessageResponse> {
+    // async send(chatIdValue: string Promise<MessageResponse> {
     // const chatId = await this.chats.assertChatExists(chatIdValue);
-    // if (typeof textValue !== 'string' || textValue.trim().length === 0 || textValue.length > 10000) {
-    //   throw new HttpError(400, 'text must be a non-empty string of at most 10000 characters');
+    // if (typeof textValue !== 'string' ||textValue.length > 10000) {
+    //   throw new HttpError(400)
     // }
 
 
   async send(chatIdValue: string, senderIdValue: string, textValue: unknown): Promise<MessageResponse> {
-    const chatId = await this.chats.assertChatExists(chatIdValue);
+    // const chatId = await this.chats.assertChatExists(chatIdValue);
+
+        const chatId = await this.chats.assertChatExists(chatIdValue);
+
        const senderId = await this.chats.assertMember(chatId, senderIdValue);
        if (typeof textValue !== 'string' || textValue.trim().length === 0 || textValue.length > 10000) {
          throw new HttpError(400, 'text must be a non-empty string of at most 10000 characters');
@@ -28,12 +34,19 @@ export class MessageService {
         const messageRef = this.database.collection('chats').doc(chatId).collection('messages').doc();
 
     await messageRef.set({
+
+
+
       id: messageRef.id,
       chatId,
-      senderId,
-      text: textValue,
+      // senderId,
+      // text: textValue,
       timestamp: FieldValue.serverTimestamp(),
+           senderId,
+      text: textValue,
       readBy: []
+
+
     });
     const saved = await messageRef.get();
     const data = saved.data();
@@ -51,6 +64,9 @@ export class MessageService {
     };
   }
 
+
+
+//this is for get message in chat
   async getMessages(chatIdValue: string, limitValue: unknown): Promise<MessageResponse[]> {
     // const chatId = await this.chats.assertChatExists(chatIdValue);
     // const limit = limitValue;
@@ -79,11 +95,18 @@ export class MessageService {
     });
   }
 
+
+
+  //this is for read mark message
   async markRead(chatIdValue: string, messageIdValue: string, userIdValue: string): Promise<void> {
     const chatId = await this.chats.assertChatExists(chatIdValue);
     const userId = await this.chats.assertMember(chatId, userIdValue);
+        // const userId = await this.chats.assertMember(chatId, userIdValue);
+
     const messageId = validateMessageId(messageIdValue);
     const messageRef = this.database.collection('chats').doc(chatId).collection('messages').doc(messageId);
+        // const messageRef = this.database'messages').doc(messageId);
+
     const message = await messageRef.get();
     if (!message.exists) {
       throw new HttpError(404, 'Message not found');

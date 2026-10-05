@@ -1,8 +1,14 @@
 import type { Request, Response } from 'express';
+
+// import { ChatService } from 'chat.service.js';
+// import type { SendMessageBody, UserBody, LastSeenBody } from '../types/index.js';
+
 import { ChatService } from '../services/chat.service.js';
 
 export class ChatController {
   constructor(private readonly chats: ChatService) {}
+    // constructor( readonly chats: ChatService) {}
+
 
   create = async (request: Request, response: Response): Promise<void> => {
     const chatId = await this.chats.createOrGetChat(request.body);
